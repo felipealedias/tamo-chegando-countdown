@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Arrival Countdown</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8; /* Light blue-gray background */
+        }
+        .countdown-unit {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #ffffff; /* White background for units */
+            border-radius: 1.5rem; /* More rounded corners */
+            padding: 1.5rem 1rem; /* Adjust padding */
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08); /* Stronger shadow */
+            transition: transform 0.2s ease-in-out;
+            min-width: 80px; /* Ensure units have a minimum width */
+        }
+        .countdown-unit:hover {
+            transform: translateY(-5px); /* Slight lift on hover */
+        }
+        .countdown-number {
+            font-size: 2.5rem; /* Larger numbers */
+            font-weight: 700;
+            color: #2563eb; /* Blue color for numbers */
+            line-height: 1;
+        }
+        .countdown-label {
+            font-size: 0.9rem; /* Slightly smaller labels */
+            font-weight: 600;
+            color: #6b7280; /* Gray for labels */
+            margin-top: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .share-button {
+            background-color: #10b981; /* Green color for share button */
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 0.75rem; /* Rounded corners for button */
+            font-weight: 600;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+        }
+        .share-button:hover {
+            background-color: #059669; /* Darker green on hover */
+            transform: translateY(-2px);
+        }
+        .message-box {
+            background-color: #e0f2fe; /* Light blue for message box */
+            border: 1px solid #90cdf4;
+            color: #2c5282;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            margin-top: 1.5rem;
+            text-align: center;
+            font-size: 0.95rem;
+            font-weight: 500;
+            opacity: 0; /* Hidden by default */
+            transition: opacity 0.3s ease-in-out;
+        }
+        .message-box.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center min-h-screen p-4">
+
+    <div class="max-w-4xl w-full bg-white p-8 md:p-12 rounded-3xl shadow-xl text-center">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-6 leading-tight">
+            Tamo chegando galera!
+        </h1>
+        <p class="text-lg md:text-xl text-gray-600 mb-8"></p>
+
+        <div id="countdown" class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-10">
+            <div class="countdown-unit">
+                <span id="days" class="countdown-number">00</span>
+                <span class="countdown-label">Days</span>
+            </div>
+            <div class="countdown-unit">
+                <span id="hours" class="countdown-number">00</span>
+                <span class="countdown-label">Hours</span>
+            </div>
+            <div class="countdown-unit">
+                <span id="minutes" class="countdown-number">00</span>
+                <span class="countdown-label">Minutes</span>
+            </div>
+            <div class="countdown-unit">
+                <span id="seconds" class="countdown-number">00</span>
+                <span class="countdown-label">Seconds</span>
+            </div>
+        </div>
+
+        <button id="shareButton" class="share-button">
+            Share Countdown
+        </button>
+
+        <div id="messageBox" class="message-box">
+            Link copied to clipboard! Share it with your friends!
+        </div>
+    </div>
+
+    <script>
+        // Set the target arrival date and time in São Paulo (BRT)
+        // IMPORTANT: Adjust this date and time to your actual flight arrival!
+        // Format: 'Month Day, Year HH:MM:SS TimeZone'
+        // Example for July 31, 2025, 10:00:00 AM BRT:
+        const targetDate = new Date('December 15, 2025 10:00:00 GMT-0300'); // Updated to December 15, 2025
+
+        const daysSpan = document.getElementById('days');
+        const hoursSpan = document.getElementById('hours');
+        const minutesSpan = document.getElementById('minutes');
+        const secondsSpan = document.getElementById('seconds');
+        const shareButton = document.getElementById('shareButton');
+        const messageBox = document.getElementById('messageBox');
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            // Calculate time components
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Display the results
+            daysSpan.textContent = String(days).padStart(2, '0');
+            hoursSpan.textContent = String(hours).padStart(2, '0');
+            minutesSpan.textContent = String(minutes).padStart(2, '0');
+            secondsSpan.textContent = String(seconds).padStart(2, '0');
+
+            // If the countdown is over
+            if (distance < 0) {
+                clearInterval(countdownInterval);
+                document.getElementById('countdown').innerHTML = `
+                    <p class="text-3xl md:text-4xl font-bold text-green-600 col-span-4">
+                        You've arrived in São Paulo! Bem-vindo!
+                    </p>
+                `;
+                shareButton.style.display = 'none'; // Hide share button after arrival
+            }
+        }
+
+        // Initial call to display immediately
+        updateCountdown();
+
+        // Update the countdown every 1 second
+        const countdownInterval = setInterval(updateCountdown, 1000);
+
+        // Share button functionality
+        shareButton.addEventListener('click', () => {
+            // Get the current URL of the page
+            const urlToShare = window.location.href;
+
+            // Use document.execCommand('copy') for clipboard functionality in iframes
+            const tempInput = document.createElement('textarea');
+            tempInput.value = urlToShare;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+
+            // Show message box
+            messageBox.classList.add('show');
+            setTimeout(() => {
+                messageBox.classList.remove('show');
+            }, 3000); // Hide after 3 seconds
+        });
+    </script>
+</body>
+</html>
