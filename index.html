@@ -41,35 +41,7 @@
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
-        .share-button {
-            background-color: #10b981; /* Green color for share button */
-            color: white;
-            padding: 0.75rem 2rem;
-            border-radius: 0.75rem; /* Rounded corners for button */
-            font-weight: 600;
-            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
-            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
-        }
-        .share-button:hover {
-            background-color: #059669; /* Darker green on hover */
-            transform: translateY(-2px);
-        }
-        .message-box {
-            background-color: #e0f2fe; /* Light blue for message box */
-            border: 1px solid #90cdf4;
-            color: #2c5282;
-            padding: 1rem;
-            border-radius: 0.75rem;
-            margin-top: 1.5rem;
-            text-align: center;
-            font-size: 0.95rem;
-            font-weight: 500;
-            opacity: 0; /* Hidden by default */
-            transition: opacity 0.3s ease-in-out;
-        }
-        .message-box.show {
-            opacity: 1;
-        }
+        /* Removed .share-button and .message-box styles as they are no longer needed */
     </style>
 </head>
 <body class="flex flex-col items-center justify-center min-h-screen p-4">
@@ -99,13 +71,7 @@
             </div>
         </div>
 
-        <button id="shareButton" class="share-button">
-            Share Countdown
-        </button>
-
-        <div id="messageBox" class="message-box">
-            Link copied to clipboard! Share it with your friends!
-        </div>
+        <!-- Share button and message box removed as requested -->
     </div>
 
     <script>
@@ -119,8 +85,7 @@
         const hoursSpan = document.getElementById('hours');
         const minutesSpan = document.getElementById('minutes');
         const secondsSpan = document.getElementById('seconds');
-        const shareButton = document.getElementById('shareButton');
-        const messageBox = document.getElementById('messageBox');
+        // shareButton and messageBox references removed
 
         function updateCountdown() {
             const now = new Date().getTime();
@@ -146,7 +111,7 @@
                         You've arrived in São Paulo! Bem-vindo!
                     </p>
                 `;
-                shareButton.style.display = 'none'; // Hide share button after arrival
+                // shareButton.style.display = 'none'; // This line is no longer needed as the button is removed
             }
         }
 
@@ -156,25 +121,7 @@
         // Update the countdown every 1 second
         const countdownInterval = setInterval(updateCountdown, 1000);
 
-        // Share button functionality
-        shareButton.addEventListener('click', () => {
-            // Get the current URL of the page
-            const urlToShare = window.location.href;
-
-            // Use document.execCommand('copy') for clipboard functionality in iframes
-            const tempInput = document.createElement('textarea');
-            tempInput.value = urlToShare;
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            document.execCommand('copy');
-            document.body.removeChild(tempInput);
-
-            // Show message box
-            messageBox.classList.add('show');
-            setTimeout(() => {
-                messageBox.classList.remove('show');
-            }, 3000); // Hide after 3 seconds
-        });
+        // Share button functionality removed
     </script>
 </body>
 </html>
